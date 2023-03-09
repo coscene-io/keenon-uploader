@@ -1,0 +1,57 @@
+- include_tasks: pip.yaml
+
+- name: Ensure the app directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ cos_dir }}/log"
+    - /etc/cos
+
+- name: Make a config
+  template:
+    src: cos.ini.j2
+    dest: "/etc/cos/config.ini"
+    mode: 400
+  notify:
+    - restart cos service
+
+- name: Copy the wheels
+  copy:
+    src: "{{ item }}"
+    dest: '{{ cos_dir }}/{{ item }}'
+  loop:
+    - requirements.txt
+    - wheels/
+
+- name: Install all found wheels
+  pip:
+    requirements: "{{ cos_dir }}/requirements.txt"
+    extra_args: "--no-index --find-links={{ cos_dir }}/wheels/"
+#    virtualenv: "{{ cos_dir }}/venv"
+#    virtualenv_python: "/usr/bin/python"
+#    virtualenv_command: "/usr/local/bin/virtualenv"
+    executable: pip
+
+- name: Install coScout
+  pip:
+    name: coScout
+    extra_args: "--no-index --find-links={{ cos_dir }}/wheels/"
+#    virtualenv: "{{ cos_dir }}/venv"
+#    virtualenv_command: "/usr/bin/python -m venv {{ cos_dir }}/venv"
+    executable: pip
+  notify:
+    - restart cos service
+
+- name: Make cos service
+  template:
+    src: cos.service.j2
+    dest: /lib/systemd/system/cos.service
+  notify:
+    - restart cos service
+
+- name: Start a service
+  systemd:
+    name: cos
+    state: started
+    daemon_reload: yes

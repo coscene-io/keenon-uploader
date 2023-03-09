@@ -1,0 +1,5 @@
+#!/bin/bash
+TARGET_HOST=$1
+
+rsync -rzvh --exclude="*.json" sample_data/* $TARGET_HOST:/root/error_logs/
+rsync -rzvh --include="*.json" sample_data/* $TARGET_HOST:/root/error_logs/

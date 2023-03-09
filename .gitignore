@@ -1,0 +1,15 @@
+.vscode
+*.pyc
+.idea/
+.DS_Store
+
+ansible/files
+
+*.log
+*.bag
+
+build/
+*.egg-info/
+dist/
+
+ansible/hosts.yaml

@@ -1,0 +1,16 @@
+[Unit]
+Description=Data Uploading Agent for coScene
+Documentation=https://github.com/coscene-io/sample-json-api-files
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory={{ cos_dir }}
+StandardOutput=syslog
+StandardError=syslog
+ExecStart=/usr/local/bin/cos --daemon
+SyslogIdentifier=cos
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

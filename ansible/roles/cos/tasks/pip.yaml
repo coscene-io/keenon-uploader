@@ -1,0 +1,52 @@
+---
+- name: Check if pip exists
+  command: which pip
+  register: pip_exists
+  failed_when: false
+  changed_when: false
+
+- name: Install Python pip
+  apt:
+    name:
+      - python-pip
+      - python-setuptools
+#      - python-virtualenv
+    update_cache: true
+    state: present
+    force_apt_get: yes
+  when: pip_exists.rc != 0
+
+#- name: Install virtualenv
+#  pip:
+#    name:
+#    - "virtualenv==20.15.1"
+#    executable: pip
+
+- name: ensures ~/.pip dir exists
+  file:
+    path: "~/.pip"
+    state: directory
+
+- name: Setup pip config
+  template:
+    src: pip.conf.j2
+    dest: "~/.pip/pip.conf"
+
+- name: Copy pip/setuptools/wheel
+  copy:
+    src: pip
+    dest: "~"
+  when: pip_exists.rc != 0
+
+- name: Copy the wheels
+  copy:
+    src: requirements-pip.txt
+    dest: ~/pip/requirements-pip.txt
+  when: pip_exists.rc != 0
+
+- name: Install all found wheels
+  pip:
+    requirements: "~/pip/requirements-pip.txt"
+    extra_args: "--no-index --find-links=~/pip/"
+    executable: pip
+  when: pip_exists.rc != 0

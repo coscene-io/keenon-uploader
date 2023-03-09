@@ -1,0 +1,4 @@
+#!/bin/bash
+BAG_FILE=$1
+
+docker run --rm -itv "$(pwd)":/workdir --workdir /workdir ros:noetic-ros-base python3 rando.py -i "$BAG_FILE" -o sample_data

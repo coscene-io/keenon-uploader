@@ -1,0 +1,11 @@
+testing:
+  hosts:
+    XXX.XXX.XXX.XXX:
+      ansible_user: root
+  vars:
+    server_url: https://openapi.keenon.coscene.cn
+    project_slug: default/yang-ming-zhuan-yong
+    api_key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    base_dir: /root/error_logs
+    code_limit: False
+    code_white_list: '{"12085": 10, "12086": 100}'

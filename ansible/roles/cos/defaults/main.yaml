@@ -1,0 +1,4 @@
+---
+user: "cos"
+cos_dir: "/opt/cos"
+base_dir: "."
