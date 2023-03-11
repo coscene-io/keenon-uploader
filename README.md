@@ -31,6 +31,7 @@ make install
 source .venv/bin/activate
 ```
 
+### 直接上传文件
 ```shell
 # 手动上传文件到 coscene
 $ python main.py ./examples/sample_data/2.jpg ./examples/sample_data/3.jpg      
