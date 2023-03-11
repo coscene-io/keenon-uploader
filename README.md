@@ -38,7 +38,7 @@ $ python main.py ./examples/sample_data/2.jpg ./examples/sample_data/3.jpg
 ### 服务模式
 
 ```shell
-$ python main.py --daemon --base-dir <base dir> --mode=<client id>
+$ python main.py --daemon --base-dir <base dir>
 ```
 
 将会启动一个服务检测 `<base dir>` 目录。用户可以将上传请求写入这个目录，文件格式为：
