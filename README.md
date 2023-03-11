@@ -1,10 +1,5 @@
 # Sample files to upload
 
-## 依赖
-```shell
-make install
-```
-
 ## 配置
 创建一个文件在~/.cos.ini
 
@@ -29,6 +24,12 @@ api_key = <API_KEY>
 ## 本地调试
 
 配置好以上 `.cos.ini` 后
+
+安装依赖
+```shell
+make install
+source .venv/bin/activate
+```
 
 ```shell
 # 手动上传文件到 coscene
