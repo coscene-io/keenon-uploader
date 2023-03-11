@@ -47,7 +47,6 @@ $ python main.py --daemon --base-dir <base dir>
 
 ```json
 {
-  "recordName": "上传后的记录名称",
   "bag": [
     "bag1.bag",
     "bag2.bag"
@@ -59,7 +58,7 @@ $ python main.py --daemon --base-dir <base dir>
 }
 ```
 
-每当新 JSON 文件在 `<base dir>` 被创建，刻行将创建新的记录并上传 bag 和 log 文件
+服务模式将没60秒扫描一次 `<base dir>` 未处理的上传请求，并创建新的记录上传 bag 和 log 文件
 
 ## 部署到一台Ubuntu操作系统的机器人
 - 本地电脑（执行端）需要安装 `ansible`
