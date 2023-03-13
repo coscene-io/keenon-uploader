@@ -1,4 +1,4 @@
-# Sample instructions to upload
+# Sample instructions to run the uploader
 
 ## 配置
 创建一个文件在~/.cos.ini
