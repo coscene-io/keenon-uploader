@@ -1,0 +1,9 @@
+FROM python:2.7.18
+
+WORKDIR /app
+ADD requirements.txt .
+ADD build.sh .
+
+RUN bash build.sh
+
+ENTRYPOINT ["python", "-m", "nuitka"]

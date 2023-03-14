@@ -124,6 +124,12 @@ $ ./out/main.bin -c ./ansible/files/sample.ini --daemon --base-dir ./examples/sa
 
 ```
 
+or build a docker image and build faster
+```
+docker build -t nuitka -f Dockerfile.build .
+docker run -itv $(pwd):/app nuitka --standalone --follow-imports --onefile --show-memory --show-progress --output-dir=out main.py --output-filename=cos
+```
+
 ### 问题
 
 不支持交叉编译，MacOS 下编译 Linux 可执行文件，会报错

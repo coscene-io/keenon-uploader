@@ -78,6 +78,13 @@ $(WHEEL_DIR)/downloaded: $(DIST_WHEEL) ansible/files/pip requirements.txt
 .PHONY: build
 build: $(WHEEL_DIR)/downloaded
 
+
+.PHONY: build-in-docker
+build-in-docker:
+	docker build -t nuitka -f Dockerfile.build .
+	docker run -itv $(pwd):/app nuitka --standalone --follow-imports --onefile --show-memory --show-progress --output-dir=out main.py --output-filename=cos
+
+
 .PHONY: ansible
 ansible: build
 	ansible-playbook -i ansible/hosts.yaml ansible/site.yaml
