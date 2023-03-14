@@ -100,3 +100,30 @@ Swagger 是 SmartBear 软件公司为 API 开发者提供的一套工具，也�
 3. 输入地址 `http://127.0.0.1:31338/swagger.json` 查看即可获取到接口文档
 
 ![swagger](img/swagger.png)
+
+
+## nuitka
+
+[nuitka](https://github.com/Nuitka/Nuitka) 是一个 Python 编译器，可以将 Python 代码编译成 C 代码，然后编译成可执行文件。
+
+```bash
+# virtualenv 20 存在一定兼容性活动，建议使用 Docker, 或者 virtualenv 16
+$ docker run -v ${Project-Path}:/app -it python:2.7.18 /bin/bash
+
+# 安装依赖 
+$ pip install -r requirements.txt
+
+# 安装 nuitka
+$ pip install nuitka
+
+# 打包编译
+$ python -m nuitka --standalone --follow-imports --onefile --show-memory --show-progress  --output-dir=out  main.py
+
+# 运行
+$ ./out/main.bin -c ./ansible/files/sample.ini --daemon --base-dir ./examples/sample_data
+
+```
+
+### 问题
+
+不支持交叉编译，MacOS 下编译 Linux 可执行文件，会报错
