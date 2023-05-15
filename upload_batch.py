@@ -25,6 +25,7 @@ client = ApiClient(API_BASE, API_KEY, PROJECT)
 def process_file(dirname, basename, record_prefix):
     mat = RECORD_TITLE_REGEX.search(basename)
     if not mat:
+        print('Skipping file {} because it does not match expected pattern'.format(basename))
         return
 
     record_title = '{}-{}'.format(record_prefix, mat.group(1))
