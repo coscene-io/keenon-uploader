@@ -3,6 +3,8 @@ import argparse
 import sys
 
 from cos.api import ApiClient
+# TODO: ConfigManager has a bad import, don't know what it does or how it's
+# used, but right now it isn't on the critical path.
 # from cos.config import ConfigManager
 from cos.exception import CosException
 from cos.kn import KNMod
