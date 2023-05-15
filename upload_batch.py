@@ -5,8 +5,8 @@ import re
 
 from cos.api import ApiClient
 
-API_BASE = 'https://api.coscene.cn'
-API_KEY = 'YmI1YTM0OTM3N2Y2N2FjNGQwNTM1NWZhYjk5NGM0NWZjMDkyMzM0Mjk4MDkwMWExMDczN2NiZjFhNDFmZTkyMw=='
+API_BASE = 'https://openapi.staging.coscene.cn'
+API_KEY = 'YmI1Y---------------------------------------------------------------------------------=='
 PROJECT = 'default/123e'
 
 WANTED_FILE_SUFFIXES = [
@@ -38,7 +38,7 @@ def upload_batch(directory, tag, start, limit):
     groups = { name: RECORD_PREFIX_MAPPING[name] for name in os.listdir(directory) if p.isdir(p.join(directory, name)) }
     files_to_upload = []
     for name, prefix in groups.items():
-        for dir_path, _, filenames in os.walk(p.join(directory, dir_name)):
+        for dir_path, _, filenames in os.walk(p.join(directory, name)):
             for f in filenames:
                 if not any(f.endswith(s) for s in WANTED_FILE_SUFFIXES):
                     continue
@@ -64,5 +64,5 @@ if __name__ == '__main__':
     parser.add_argument('--limit', type=int, default=-1)
     args = parser.parse_args()
 
-    upload_batch(**args)
+    upload_batch(args.directory, args.tag, args.start, args.limit)
 

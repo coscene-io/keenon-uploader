@@ -3,7 +3,7 @@ import argparse
 import sys
 
 from cos.api import ApiClient
-from cos.config import ConfigManager
+# from cos.config import ConfigManager
 from cos.exception import CosException
 from cos.kn import KNMod
 from cos.tools import Unbuffered
