@@ -16,10 +16,6 @@ WANTED_FILE_SUFFIXES = [
 
 RECORD_TITLE_REGEX = re.compile(r'(\b202\d(-\d\d){5}.*)\.bag')
 
-RECORD_PREFIX_MAPPING = {
-        '00': 'Grand Budapest Hotel'
-}
-
 client = ApiClient(API_BASE, API_KEY, PROJECT)
 
 def process_file(dirname, basename, record_prefix):
@@ -35,8 +31,16 @@ def process_file(dirname, basename, record_prefix):
     client.upload_files(upload_list, rec)
 
 
-def upload_batch(directory, tag, start, limit):
-    groups = { name: RECORD_PREFIX_MAPPING[name] for name in os.listdir(directory) if p.isdir(p.join(directory, name)) }
+def upload_batch(directory, config_file, tag, start, limit):
+    prefixes = {}
+    with open(config_file) as f:
+        for line in f:
+            if not line.strip():
+                continue
+            s = line.strip().split('----')
+            prefixes[s[0]] = s[1]
+
+    groups = { name: prefixes[name] for name in os.listdir(directory) if p.isdir(p.join(directory, name)) }
     files_to_upload = []
     for name, prefix in groups.items():
         for dir_path, _, filenames in os.walk(p.join(directory, name)):
@@ -49,7 +53,7 @@ def upload_batch(directory, tag, start, limit):
     files_with_index = list(enumerate(sorted(files_to_upload)))
     to_process = files_with_index[start:]
     if limit > 0:
-        to_process = files_with_index[:limit]
+        to_process = to_process[:limit]
 
     for index, (path, name, prefix) in to_process:
         print('Starting to process file: ' + str(index))
@@ -61,9 +65,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--tag', type=str)
     parser.add_argument('--directory', type=str, required=True)
+    parser.add_argument('--config', type=str, required=True)
     parser.add_argument('--start', type=int, default=0)
     parser.add_argument('--limit', type=int, default=-1)
     args = parser.parse_args()
 
-    upload_batch(args.directory, args.tag, args.start, args.limit)
+    upload_batch(args.directory, args.config, args.tag, args.start, args.limit)
 
