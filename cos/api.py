@@ -109,7 +109,7 @@ class ApiClient:
             return result
 
         except RequestException as e:
-            six.raise_from(CosException('Create Record failed'), e)
+            six.raise_from(CosException('Update Record failed'), e)
 
 
     def get_record(self, record_name):
