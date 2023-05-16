@@ -85,6 +85,33 @@ class ApiClient:
         except RequestException as e:
             six.raise_from(CosException('Create Record failed'), e)
 
+    def update_record(self, record, fields):
+        url = "{api_base}/dataplatform/v1alpha2/{record}".format(
+            api_base=self.api_base,
+            record=record['name']
+        )
+        params = {
+            'updateMask': fields,
+        }
+        try:
+            response = requests.patch(
+                url=url,
+                json=record,
+                params=params,
+                headers=self.request_headers,
+                auth=self.basic_auth
+            )
+            if response.status_code == 401:
+                raise CosException("Unauthorized")
+
+            result = response.json()
+            print("==> Successfully updated the record {record_name}".format(record_name=result.get("name")))
+            return result
+
+        except RequestException as e:
+            six.raise_from(CosException('Create Record failed'), e)
+
+
     def get_record(self, record_name):
         """
         :param record_name: 记录的正则名
@@ -115,6 +142,47 @@ class ApiClient:
             return result
         except RequestException as e:
             six.raise_from(CosException('Get Record failed'), e)
+
+    def ensure_label(self, display_name):
+        """
+        :param display_name: 标签名称
+        :param record: 记录json
+        :return:
+        """
+        url = '{api_base}/dataplatform/v1alpha1/{project}/labels'.format(
+          api_base=self.api_base,
+          project=self.project_name
+        )
+        try:
+            response = requests.post(
+                url=url,
+                json={'display_name': display_name},
+                headers=self.request_headers,
+                auth=self.basic_auth
+            )
+            if response.status_code == 401:
+                raise CosException("Unauthorized")
+
+        except RequestException as e:
+            six.raise_from(CosException('Create label failed'), e)
+
+        try:
+            response = requests.get(
+                url=url,
+                params={'parent': self.project_name, 'filter': 'displayName=' + display_name, 'pageSize': 100},
+                headers=self.request_headers,
+                auth=self.basic_auth
+            )
+            if response.status_code == 401:
+                raise CosException("Unauthorized")
+
+            for item in response.json().get('labels'):
+                if item.get('displayName') == display_name:
+                    return item
+
+            raise CosException('Could not find label with given name: ' + display_name)
+        except RequestException as e:
+            six.raise_from(CosException('List label failed'), e)
 
     def _convert_project_slug(self, warehouse_id, proj_slug):
         """
@@ -319,8 +387,8 @@ class ApiClient:
 
     @staticmethod
     def _make_file_resource_name(record, file_info):
-        return "{record_name}/files/{filename}".format(
-            record_name=record.get("name"),
+        return "{revision}/files/{filename}".format(
+            revision=record['head']['name'],
             filename=file_info.get("filename")
         )
 

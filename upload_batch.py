@@ -22,7 +22,7 @@ RECORD_PREFIX_MAPPING = {
 
 client = ApiClient(API_BASE, API_KEY, PROJECT)
 
-def process_file(dirname, basename, record_prefix):
+def process_file(dirname, basename, record_prefix, tag):
     mat = RECORD_TITLE_REGEX.search(basename)
     if not mat:
         print('Skipping file {} because it does not match expected pattern'.format(basename))
@@ -32,7 +32,12 @@ def process_file(dirname, basename, record_prefix):
 
     upload_list = [p.join(dirname, basename)]
     rec = client.create_or_get_record(record_title, upload_list)
-    client.upload_files(upload_list, rec)
+
+    if tag:
+        rec['labels'].append( client.ensure_label(tag))
+
+    with_label = client.update_record(rec, ['labels'])
+    client.upload_files(upload_list, with_label)
 
 
 def upload_batch(directory, tag, start, limit):
@@ -53,7 +58,7 @@ def upload_batch(directory, tag, start, limit):
 
     for index, (path, name, prefix) in to_process:
         print('Starting to process file: ' + str(index))
-        process_file(path, name, prefix)
+        process_file(path, name, prefix, tag)
         print('Finished processing file: ' + str(index))
 
 
